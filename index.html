@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <style type="text/css">
+        .item {
+            width: 150px;
+            height: 150px;
+            background-size:100%;
+            background-repeat: no-repeat;
+            margin-top: 20px;
+            margin-left: 20px;
+            background-color: #3f4652;
+            transition: 0.3s;       
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            height: 200px;
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .white {
+            top: 10px;
+            left: 500px;
+            height: 600px;
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #383f49;
+            position: absolute;
+            transition: 1s;
+        }
+        .timecount {
+            position: absolute;
+            top: 600px;
+            left: 790px;
+        }
+        .font {
+            text-align: center;
+            font-size: 35px;
+            font-family: "trebuchet ms";
+            padding-top: 70px;
+        }
+        .btn {
+            position: absolute;
+            top: 250px;
+            left: 355px;
+        }
+        .active {
+            border: 1px solid #616771;
+        }
+    </style>
+</head>
+<body style="background: #383f49;">
+
+
+    <div class="row">
+    <div class="white font">Найдите и нажмите на все одинаковые иконки за 6 секунд, просто тыкая на них. Чтобы начать игру, нажмите соответствующую кнопку
+    <button class="btn">Начать игру</button></div>
+    </div>
+    <div class="timecount font">Секунды: <span class="time"></span></div>
+    <script type="text/javascript">
+    //див-родитель
+    let item = document.querySelector(".item")
+    let row = document.querySelector(".row");
+    let white = document.querySelector(".white")
+    let past_div = null;
+    let counter = 0;
+    let time = 6;
+    let btn = document.querySelector(".btn");
+    let elem;
+    let growing = document.querySelector(".growing")
+    let top_move = 10
+    let int1;
+    let int2;
+
+    document.querySelector(".time").innerHTML = time;
+
+
+
+    btn.onclick = function(){
+        int1 = setInterval(tick, 1000)
+
+        int2 = setTimeout(timer, 6200)
+        document.querySelector(".time").innerHTML = time;
+        top_move = top_move - 1000
+        white.style.top = top_move + "px";
+    }   
+
+    function tick(){
+        time = time - 1
+        document.querySelector(".time").innerHTML = time;
+    }
+
+    function timer(){
+        clearInterval(int1);
+        if (counter < 6){
+                alert("Think faster, chucklenuts!");
+            } 
+        
+        body.style.display = "none";
+    }
+    //хранение картинок
+    let images = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "1.png", "2.png", "3.png", "4.png", "5.png", "6.png"];
+
+    function randomNum(arg) {
+        let rand = Math.random() * arg;
+        let round = Math.round(rand);
+        return round;
+    }
+    
+    for (let i=0; i<12; i=i+1) {
+        let elem = document.createElement("div");
+        row.appendChild(elem)
+        elem.classList.add("item")
+        let index = randomNum(images.length-1);
+        elem.style.backgroundImage = "url(" + images[index] + ")";
+        elem.me = images[index]
+
+        images.splice(index, 1);
+
+        elem.onmouseover = function(event) {
+            let target = event.target;
+            target.style.width ='155px'
+            target.style.height ='155px'
+        };
+        elem.onmouseout = function(event) {
+            let target = event.target;
+            target.style.width ='150px'
+            target.style.height ='150px'
+        }
+
+        elem.onclick = function(){
+            elem.classList.add("active")
+
+            if(past_div == null){
+                past_div = elem;
+            }else if(past_div.me == elem.me){
+                counter = counter + 1;
+                past_div.style.opacity = "0";
+                elem.style.opacity = "0"
+                past_div = null;
+            }else if(past_div.me != elem.me){
+                elem.classList.remove("active");
+                past_div.classList.remove("active");
+                past_div = null;
+            }if (counter == 6){
+                alert("Всё найдено")
+            }            console.log(past_div)
+        }
+
+
+    }
+
+    </script>
+</body>
+</html>
